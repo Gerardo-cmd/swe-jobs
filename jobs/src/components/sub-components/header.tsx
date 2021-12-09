@@ -1,10 +1,10 @@
 import React from 'react';
 
-interface Props {
+interface HeaderProps {
     title: String;
 }
 
-const header: React.FC<{title: String}> = (props: Props) => {
+const header: React.FC<{title: String}> = (props: HeaderProps) => {
     return (
         <div>
             <h1>{props.title}</h1>

@@ -42,27 +42,50 @@ const NewPosition: React.FC = () => {
     const handleSubmit = (e: any) => {
         e.preventDefault();
         resetErrors();
-        const positionTitle = e.target.positionTitle.value;
-        const company = e.target.company.value;
-        const salary = e.target.salary.value;
+        let headers = new Headers();
+
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        const positionTitle = e.target.positionTitle.value.trim();
+        const company = e.target.company.value.trim();
+        const salary = e.target.salary.value.trim();
         let error = false;
-        if (positionTitle.trim() === "") {
+        if (positionTitle === "") {
             setPositionTitleError(true);
             error = true;
         }
-        if (company.trim() === "") {
+        if (company === "") {
             setCompanyError(true);
             error = true;
         }
-        if (salary.trim() === "") {
+        if (salary === "" || !(/^\d+$/.test(salary))) {
             setSalaryError(true);
             error = true;
         }
         if (error) {
             return;
         }
-        //Save to database with Fetch request...
-        navigate("/");
+        const data = {
+            title: positionTitle,
+            company: company,
+            salary: salary,
+            workEnvironment: environment
+        };
+        fetch('http://swe-jobs.herokuapp.com/new-job', {
+            method: 'POST',
+            mode: 'cors',
+            headers: headers,
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            navigate("/");
+        })
+        .catch((error) => {
+        console.error('Error:', error);
+        });
+        
     }
 
     return (
@@ -116,7 +139,6 @@ const NewPosition: React.FC = () => {
                     </TextField>
                 </div>
                 <div>
-                    {/* Try using Material-UI's Input that's already imported at the top? */}
                     <Input type="submit" value="Submit" />
                 </div>
             </Box>
