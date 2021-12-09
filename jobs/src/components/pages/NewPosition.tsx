@@ -89,7 +89,7 @@ const NewPosition: React.FC = () => {
     }
 
     return (
-        <div>
+        <div className="Page container">
             <Header title={"New Position"}/>
             <Box
                 component="form"

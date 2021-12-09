@@ -34,20 +34,15 @@ const HomePage: React.FC = () => {
     }, []);
 
     return (
-        <div className="Page">
+        <div className="Page container">
             <Header title={"Applied Positions"}/>
-            <Box
-                component="form"
-                sx={{
-                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                }}
-                noValidate
-                autoComplete="off"
-            >
-                <div>
+            <Box component="span">
+                <div className="row">
                     {jobs.map((position, index) => {
                         return (
-                            <PositionCard key={index} title={position.title} company={position.company} salary={position.salary} environment={position.workEnvironment}/>
+                            <div className="col-lg-3 col-md-4 col-sm-12">
+                                <PositionCard key={index} title={position.title} company={position.company} salary={position.salary} environment={position.workEnvironment} />
+                            </div>
                         );
                     })}
                 </div>

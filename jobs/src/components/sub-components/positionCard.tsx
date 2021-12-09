@@ -39,7 +39,7 @@ interface CardProps {
 
 const PositionCard = (props: CardProps) => {
   return (
-      <Card variant="outlined">{card(props.company, props.title, props.salary, props.environment)}</Card>
+      <Card style={{margin: "10px"}} variant="outlined">{card(props.company, props.title, props.salary, props.environment)}</Card>
   );
 }
 
