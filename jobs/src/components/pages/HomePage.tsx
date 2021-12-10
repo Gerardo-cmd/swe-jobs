@@ -8,11 +8,11 @@ import Header from '../sub-components/header';
 import PositionCard from '../sub-components/positionCard';
 
 interface PositionObject  {
-    title: String;
-    company: String;
-    salary: String;
-    workEnvironment: String;
-    status: String;
+    title: string;
+    company: string;
+    salary: string;
+    workEnvironment: string;
+    status: string;
 }
 
 interface FilterObject {
@@ -24,10 +24,10 @@ interface FilterObject {
 
 const sortingOptions = [
     {
-      value: 'Income'
+        value: 'Alphabetically (Company)'
     },
     {
-      value: 'Alphabetically (Company)'
+      value: 'Income'
     }
 ];
 
@@ -178,7 +178,24 @@ const HomePage: React.FC = () => {
             <Box component="span">
                 <div className="row">
                     {/* Sort positions with JS's sort() for arrays!!! */}
-                    {jobs.map((position, index) => {
+                    {jobs.sort((a: PositionObject, b: PositionObject) => {
+                        if (sortBy.toLowerCase() === "alphabetically (company)") {
+                            if (a.company >= b.company) {
+                                return 1; // a should come after b since 'a > b' means it's later in the alphabet
+                            }
+                            else {
+                                return -1;
+                            }
+                        }
+                        else {
+                            if (parseInt(a.salary, 10) >= parseInt(b.salary, 10)) {
+                                return -1; // a should come before b since it is bigger
+                            }
+                            else {
+                                return 1;
+                            }
+                        }
+                    }).map((position, index) => {
                         if (isFilterOn()) { // At least one of the filters are on
                             if (filterPosition(position)) {
                                 return (
