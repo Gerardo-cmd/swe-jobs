@@ -7,7 +7,15 @@ import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Header from '../sub-components/header';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
+
+interface PositionObject  {
+    title: string;
+    company: string;
+    salary: string;
+    workEnvironment: string;
+    status: string;
+}
 
 const environments = [
     {
@@ -36,19 +44,48 @@ const statuses = [
     }
 ];
 
-const NewPosition: React.FC = () => {
+const EditPosition: React.FC = () => {
+    let params = useParams();
     const navigate = useNavigate();
     const [positionTitleError, setPositionTitleError] = useState(false);
     const [companyError, setCompanyError] = useState(false);
     const [salaryError, setSalaryError] = useState(false);
     const [environment, setEnvironment] = useState('On-site');
     const [status, setStatus] = useState('Applied');
+    const [job, setJob] = useState<PositionObject | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        const positionId = params.positionId;
+        let headers = new Headers();
         const token: string | null = localStorage.getItem("jobs-token");
         if (token == null) {
             navigate("/");
         }
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        headers.append('Authorization', `Bearer ${token}`);
+        fetch(`http://swe-jobs.herokuapp.com/job/${positionId}`, {
+            method: 'GET',
+            mode: 'cors',
+            headers: headers
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((response) => {
+            if (response.code !== 200) {
+                navigate("/homepage");
+            }
+            console.log(response);
+            setJob(response.data);
+            setEnvironment(response.data.workEnvironment);
+            setStatus(response.data.status);
+            setLoading(false);
+        })
+        .catch((e) => {
+            console.log(e);
+        });
     }, []);
 
     const handleEnvironmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,13 +103,13 @@ const NewPosition: React.FC = () => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        resetErrors();
-        let headers = new Headers();
-
         const token: string | null = localStorage.getItem("jobs-token");
         if (token == null) {
             navigate("/");
         }
+        resetErrors();
+        let headers = new Headers();
+        const positionId = params.positionId;
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', `Bearer ${token}`);
@@ -97,14 +134,44 @@ const NewPosition: React.FC = () => {
         }
 
         const data = {
+            jobId: positionId,
             title: positionTitle,
             company: company,
             salary: salary,
             workEnvironment: environment,
             status: status
         };
-        fetch('http://swe-jobs.herokuapp.com/new-job', {
+        fetch('http://swe-jobs.herokuapp.com/job', {
             method: 'POST',
+            mode: 'cors',
+            headers: headers,
+            body: JSON.stringify(data),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            navigate("/homepage");
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    const handleDelete = () => {
+        const token: string | null = localStorage.getItem("jobs-token");
+        if (token == null) {
+            navigate("/");
+        }
+        const positionId = params.positionId;
+        const data = {
+            jobId: positionId
+        }
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Accept', 'application/json');
+        headers.append('Authorization', `Bearer ${token}`);
+        fetch('http://swe-jobs.herokuapp.com/job', {
+            method: 'DELETE',
             mode: 'cors',
             headers: headers,
             body: JSON.stringify(data),
@@ -121,7 +188,8 @@ const NewPosition: React.FC = () => {
 
     return (
         <div className="Page container">
-            <Header title={"New Position"}/>
+            <Header title={"Edit Position"}/>
+            {loading ? "" : 
             <Box
                 component="form"
                 sx={{
@@ -132,10 +200,10 @@ const NewPosition: React.FC = () => {
                 onSubmit={handleSubmit}
             >
                 <div>
-                    <TextField id="outlined-basic" error={positionTitleError} label="Position Title" variant="outlined" name="positionTitle" inputProps={{ maxLength: 40}} />
+                    <TextField id="outlined-basic" defaultValue={job?.title} error={positionTitleError} label="Position Title" variant="outlined" name="positionTitle" inputProps={{ maxLength: 40 }} />
                 </div>
                 <div>
-                    <TextField id="outlined-basic" error={companyError} label="Company" variant="outlined" name="company" />
+                    <TextField id="outlined-basic" defaultValue={job?.company} error={companyError} label="Company" variant="outlined" name="company" />
                 </div>
                 <div>
                     <FormControl sx={{ m: 1 }}>
@@ -145,6 +213,7 @@ const NewPosition: React.FC = () => {
                             error={salaryError}
                             label="Yearly Salary"
                             name="salary"
+                            defaultValue={job?.salary}
                         />
                     </FormControl>
                 </div>
@@ -186,15 +255,18 @@ const NewPosition: React.FC = () => {
                         ))}
                     </TextField>
                 </div>
-                <div style={{marginTop: '5px'}}>
-                    <Input type="submit" value="Submit" />
+                <div>
+                    <Input type="submit" value="Save" />
                 </div>
-                <div style={{margin: '25px'}}>
+                <div style={{margin: '10px'}}>
+                    <Button variant="outlined" color="error" onClick={handleDelete}>Delete</Button>
+                </div>
+                <div style={{margin: '10px'}}>
                     <Button variant="outlined" onClick={() => {navigate("/homepage")}}>Cancel</Button>
                 </div>
-            </Box>
+            </Box>}
         </div>
     );
 }
 
-export default NewPosition;
+export default EditPosition;

@@ -35,6 +35,7 @@ const sortingOptions = [
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
     const [jobs, setJobs] = useState<PositionObject[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [sortBy, setSortBy] = useState<String>("Income");
     const [filter, setFilter] = useState<FilterObject>({
         appliedFilterOn: false, 
@@ -62,6 +63,7 @@ const HomePage: React.FC = () => {
         .then((response) => {
             console.log(response);
             setJobs(response.data);
+            setLoading(false);
         })
         .catch((e) => {
             console.log(e);
@@ -131,8 +133,8 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="Page container">
+            {loading ? "" : <div>
             <Header title={"Applied Positions"}/>
-
             <FormGroup style={{marginTop: "25px", marginBottom: "50px"}}>
                 <div className="row"style={{marginBottom: "25px"}} >
                     <div className="col-2">
@@ -231,10 +233,10 @@ const HomePage: React.FC = () => {
                                 </div>
                             );
                         }
-                        
                     })}
                 </div>
             </Box>
+            </div>}
         </div>
     );
 }

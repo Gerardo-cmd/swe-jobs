@@ -1,8 +1,9 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import Header from '../sub-components/header';
 import { useNavigate } from 'react-router';
 
@@ -51,11 +52,25 @@ const Login: React.FC = () => {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            localStorage.setItem("jobs-token", data.data.token);
-            navigate("/homepage");
+            if (data.code === 401) {
+                setEmailError(true);
+                return;
+            }
+            else if (data.code === 402) {
+                setPasswordError(true);
+                return;
+            }
+            else if (data.code === 200) {
+                localStorage.setItem("jobs-token", data.data.token);
+                navigate("/homepage");
+            }
+            else {
+                throw new Error("Unrecognized status code");
+            }
         })
         .catch((error) => {
             console.error('Error:', error);
+            return;
         });
     }
 
@@ -75,15 +90,20 @@ const Login: React.FC = () => {
                     <TextField id="outlined-basic" error={emailError} label="Email" variant="outlined" name="email" />
                 </div>
                 <div>
-                    <TextField id="outlined-basic" error={passwordError} label="Password" variant="outlined" name="password" />
+                    <TextField id="outlined-basic" error={passwordError} label="Password" type="password" variant="outlined" name="password" />
                 </div>
                 <div>
-                    <Input type="submit" value="Submit" />
-                </div>
-                <div>
-                    <Button variant="outlined" onClick={() => {navigate("/signup")}}>Sign Up</Button>
+                    <Input type="submit" value="Login" />
                 </div>
             </Box>
+            <div style={{margin: '25px'}}>
+                <div>
+                    <Typography>Don't have an account?</Typography>
+                </div>
+                <div style={{margin: '5px'}}>
+                    <Button variant="outlined" onClick={() => {navigate("/signup")}}>Sign Up</Button>
+                </div>
+            </div>
         </div>
     );
 }

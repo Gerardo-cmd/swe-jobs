@@ -1,35 +1,36 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Link } from 'react-router-dom';
 
-const card = (company: String, title: String, salary: String, environment: String, status: String, statusColor: String) => {
-  
+const card = (company: String, title: String, salary: String, environment: String, status: String, statusColor: String, navigate: NavigateFunction) => {
     return (
       <React.Fragment>
-        <CardContent>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {company}
-          </Typography>
-          <Typography variant="h5" component="div">
-            {title}
-          </Typography>
-          <Typography variant="body2">
-            ${salary} per year
-          </Typography>
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {environment}
-          </Typography>
-          <Typography style={{color: `${statusColor}`}} variant="body2">
-            {status}
-          </Typography>
-        </CardContent>
-        {/* <CardActions>
-        <Button size="small">Learn More</Button>
-        </CardActions> */}
+        <Link
+          style={{ display: "block", margin: "1rem 0", textDecoration: "none", color: "black"}}
+          to={`/${company.replace(/ /g, "_")}-${title.replace(/ /g, "_")}`}
+          key={`${company.replace(/ /g, "_")}-${title.replace(/ /g, "_")}`}
+        >
+          <CardContent>
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+              {company}
+            </Typography>
+            <Typography sx={{ fontSize: 21 }}>
+              {title}
+            </Typography>
+            <Typography variant="body2">
+              ${salary} per year
+            </Typography>
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+              {environment}
+            </Typography>
+            <Typography style={{color: `${statusColor}`}} variant="body2">
+              {status}
+            </Typography>
+          </CardContent>
+        </Link>
       </React.Fragment>
     )
 };
@@ -43,6 +44,7 @@ interface CardProps {
 }
 
 const PositionCard = (props: CardProps) => {
+  const navigate = useNavigate();
   let statusColor: String = "blue";
   switch (props.status.toLowerCase()) {
     case "interviewing":
@@ -62,7 +64,7 @@ const PositionCard = (props: CardProps) => {
   }
 
   return (
-      <Card style={{height:"225px", margin: "10px", boxShadow: `0 0 10px 2px ${statusColor} inset`}} variant="outlined">{card(props.company, props.title, props.salary, props.environment, props.status, statusColor)}</Card>
+      <Card style={{height:"230px", margin: "10px", boxShadow: `0 0 10px 2px ${statusColor} inset`}} variant="outlined">{card(props.company, props.title, props.salary, props.environment, props.status, statusColor, navigate)}</Card>
   );
 }
 

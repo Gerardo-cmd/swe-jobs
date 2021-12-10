@@ -25,28 +25,23 @@ const SignUp: React.FC = () => {
         const email = e.target.email.value.trim();
         const password = e.target.password.value.trim();
         const confirmPassword = e.target.confirmPassword.value.trim();
-        let error = false;
         if (email === "") {
             setEmailError(true);
-            error = true;
+            return;
         }
         if (password === "") {
             setPasswordError(true);
-            error = true;
+            return;
         }
         if (confirmPassword === "") {
             setConfirmPasswordError(true);
-            error = true;
+            return;
         }
         if (password !== "" && confirmPassword !== "" && password !== confirmPassword) {
             setPasswordError(true);
             setConfirmPasswordError(true);
-            error = true;
-        }
-        if (error) {
             return;
         }
-
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
@@ -87,16 +82,20 @@ const SignUp: React.FC = () => {
                     <TextField id="outlined-basic" error={emailError} label="Email" variant="outlined" name="email" />
                 </div>
                 <div>
-                    <TextField id="outlined-basic" error={passwordError} label="Password" variant="outlined" name="password" />
+                    <TextField id="outlined-basic" error={passwordError} label="Password" type="password" variant="outlined" name="password" />
                 </div>
                 <div>
-                    <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" variant="outlined" name="confirmPassword" />
+                    <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" type="password" variant="outlined" name="confirmPassword" />
                 </div>
                 <div>
                     <Input type="submit" value="Submit" />
                 </div>
             </Box>
-            <Button variant="outlined" onClick={() => {navigate("/")}}>Go back</Button>
+            <div style={{margin: '25px'}}>
+                <div>
+                    <Button variant="outlined" onClick={() => {navigate("/")}}>Go Back</Button>
+                </div>
+            </div>
         </div>
     );
 }
