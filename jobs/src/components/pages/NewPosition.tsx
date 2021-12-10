@@ -9,7 +9,6 @@ import FormControl from '@mui/material/FormControl';
 import Header from '../sub-components/header';
 import { useNavigate } from 'react-router';
 
-
 const environments = [
     {
       value: 'On-site'
@@ -20,7 +19,22 @@ const environments = [
     {
       value: 'Remote'
     }
-  ];
+];
+
+const statuses = [
+    {
+        value: 'Applied'
+    },
+    {
+        value: 'Interviewing'
+    },
+    {
+        value: 'Denied'
+    },
+    {
+        value: 'Offered'
+    }
+];
 
 const NewPosition: React.FC = () => {
     const navigate = useNavigate();
@@ -28,9 +42,13 @@ const NewPosition: React.FC = () => {
     const [companyError, setCompanyError] = useState(false);
     const [salaryError, setSalaryError] = useState(false);
     const [environment, setEnvironment] = useState('On-site');
+    const [status, setStatus] = useState('Applied');
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEnvironmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEnvironment(event.target.value);
+    };
+    const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setStatus(event.target.value);
     };
 
     const resetErrors = () => {
@@ -48,7 +66,7 @@ const NewPosition: React.FC = () => {
         headers.append('Accept', 'application/json');
         const positionTitle = e.target.positionTitle.value.trim();
         const company = e.target.company.value.trim();
-        const salary = e.target.salary.value.trim();
+        const salary = e.target.salary.value.replaceAll(",", "").trim();
         let error = false;
         if (positionTitle === "") {
             setPositionTitleError(true);
@@ -65,11 +83,13 @@ const NewPosition: React.FC = () => {
         if (error) {
             return;
         }
+
         const data = {
             title: positionTitle,
             company: company,
             salary: salary,
-            workEnvironment: environment
+            workEnvironment: environment,
+            status: status
         };
         fetch('http://swe-jobs.herokuapp.com/new-job', {
             method: 'POST',
@@ -83,7 +103,7 @@ const NewPosition: React.FC = () => {
             navigate("/");
         })
         .catch((error) => {
-        console.error('Error:', error);
+            console.error('Error:', error);
         });
         
     }
@@ -112,7 +132,6 @@ const NewPosition: React.FC = () => {
                         <OutlinedInput
                             id="outlined-adornment-amount"
                             error={salaryError}
-                            startAdornment={<InputAdornment position="start">$</InputAdornment>}
                             label="Yearly Salary"
                             name="salary"
                         />
@@ -120,18 +139,36 @@ const NewPosition: React.FC = () => {
                 </div>
                 <div>
                     <TextField
-                        id="standard-select-currency-native"
+                        id="standard-select-environment"
                         select
                         label="Environment"
                         value={environment}
-                        onChange={handleChange}
+                        onChange={handleEnvironmentChange}
                         SelectProps={{
                             native: true,
                         }}
-                        helperText="Select One"
-                        variant="standard"
+                        variant="outlined"
                         >
                         {environments.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.value}
+                            </option>
+                        ))}
+                    </TextField>
+                </div>
+                <div>
+                    <TextField
+                        id="standard-select-status"
+                        select
+                        label="Status"
+                        value={status}
+                        onChange={handleStatusChange}
+                        SelectProps={{
+                            native: true,
+                        }}
+                        variant="outlined"
+                        >
+                        {statuses.map((option) => (
                             <option key={option.value} value={option.value}>
                                 {option.value}
                             </option>
