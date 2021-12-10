@@ -6,6 +6,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Header from '../sub-components/header';
 import PositionCard from '../sub-components/positionCard';
+import { useNavigate } from 'react-router';
 
 interface PositionObject  {
     title: string;
@@ -32,6 +33,7 @@ const sortingOptions = [
 ];
 
 const HomePage: React.FC = () => {
+    const navigate = useNavigate();
     const [jobs, setJobs] = useState<PositionObject[]>([]);
     const [sortBy, setSortBy] = useState<String>("Income");
     const [filter, setFilter] = useState<FilterObject>({
@@ -42,8 +44,13 @@ const HomePage: React.FC = () => {
     });
     useEffect(() => {
         let headers = new Headers();
+        const token: string | null = localStorage.getItem("jobs-token");
+        if (token == null) {
+            navigate("/");
+        }
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
+        headers.append('Authorization', `Bearer ${token}`);
         fetch("http://swe-jobs.herokuapp.com/jobs", {
             method: 'GET',
             mode: 'cors',
@@ -175,9 +182,9 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
             </FormGroup>
+            {jobs.length === 0 ? "You currently have no saved positions": ""}
             <Box component="span">
                 <div className="row">
-                    {/* Sort positions with JS's sort() for arrays!!! */}
                     {jobs.sort((a: PositionObject, b: PositionObject) => {
                         if (sortBy.toLowerCase() === "alphabetically (company)") {
                             if (a.company >= b.company) {
@@ -199,9 +206,8 @@ const HomePage: React.FC = () => {
                         if (isFilterOn()) { // At least one of the filters are on
                             if (filterPosition(position)) {
                                 return (
-                                    <div className="col-lg-3 col-md-4 col-sm-6">
-                                        <PositionCard 
-                                            key={index} 
+                                    <div key={index} className="col-lg-3 col-md-4 col-sm-6">
+                                        <PositionCard
                                             title={position.title} 
                                             company={position.company} 
                                             salary={position.salary} 
@@ -214,9 +220,8 @@ const HomePage: React.FC = () => {
                         }
                         else { // No filter is on so return all
                             return (
-                                <div className="col-lg-3 col-md-4 col-sm-6">
-                                    <PositionCard 
-                                        key={index} 
+                                <div key={index} className="col-lg-3 col-md-4 col-sm-6">
+                                    <PositionCard
                                         title={position.title} 
                                         company={position.company} 
                                         salary={position.salary} 

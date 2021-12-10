@@ -5,6 +5,7 @@ import {
   Route
 } from 'react-router-dom';
 import './App.css';
+import Login from './components/pages/login';
 import HomePage from './components/pages/HomePage';
 import NewPosition from './components/pages/NewPosition';
 import TemporaryDrawer from './components/sub-components/persistantDrawerLeft';
@@ -14,7 +15,8 @@ const App: React.FC = () => {
     <div className="App">
       <TemporaryDrawer />
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/homepage" element={<HomePage />} />
           <Route path="/new-position" element={<NewPosition />} />
         </Routes>
     </div>

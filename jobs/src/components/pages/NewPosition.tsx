@@ -62,8 +62,13 @@ const NewPosition: React.FC = () => {
         resetErrors();
         let headers = new Headers();
 
+        const token: string | null = localStorage.getItem("jobs-token");
+        if (token == null) {
+            navigate("/");
+        }
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
+        headers.append('Authorization', `Bearer ${token}`);
         const positionTitle = e.target.positionTitle.value.trim();
         const company = e.target.company.value.trim();
         const salary = e.target.salary.value.replaceAll(",", "").trim();
@@ -100,12 +105,11 @@ const NewPosition: React.FC = () => {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            navigate("/");
+            navigate("/homepage");
         })
         .catch((error) => {
             console.error('Error:', error);
         });
-        
     }
 
     return (

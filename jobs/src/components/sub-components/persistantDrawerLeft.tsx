@@ -18,6 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
 
@@ -124,7 +125,7 @@ const PersistentDrawerLeft = () => {
         <List>
           <ListItem button key={"Home"} onClick={() => {
             handleDrawerClose();
-            navigate("/");
+            navigate("/homepage");
           }}>
             <ListItemText primary={"Home"} />
             <ListItemIcon>
@@ -138,6 +139,16 @@ const PersistentDrawerLeft = () => {
             <ListItemText primary={"Add new position"} />
             <ListItemIcon>
               <AddIcon />
+            </ListItemIcon>
+          </ListItem>
+          <ListItem button key={"Log Out"} onClick={() => {
+            handleDrawerClose();
+            localStorage.removeItem("jobs-token");
+            navigate("/");
+          }}>
+            <ListItemText primary={"Log Out"} />
+            <ListItemIcon>
+              <LogoutIcon />
             </ListItemIcon>
           </ListItem>
         </List>
