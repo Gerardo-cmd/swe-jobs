@@ -68,32 +68,34 @@ const SignUp: React.FC = () => {
 
     return (
         <div className="Page container">
-            <Header title={"Sign Up"}/>
-            <Box
-                component="form"
-                sx={{
-                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                }}
-                noValidate
-                autoComplete="off"
-                onSubmit={handleSubmit}
-            >
-                <div>
-                    <TextField id="outlined-basic" error={emailError} label="Email" variant="outlined" name="email" />
-                </div>
-                <div>
-                    <TextField id="outlined-basic" error={passwordError} label="Password" type="password" variant="outlined" name="password" />
-                </div>
-                <div>
-                    <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" type="password" variant="outlined" name="confirmPassword" />
-                </div>
-                <div>
-                    <Input type="submit" value="Submit" />
-                </div>
-            </Box>
-            <div style={{margin: '25px'}}>
-                <div>
-                    <Button variant="outlined" onClick={() => {navigate("/")}}>Go Back</Button>
+            <div style={{marginTop: '8rem'}}>
+                <Header title={"Sign Up"}/>
+                <Box
+                    component="form"
+                    sx={{
+                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                    }}
+                    noValidate
+                    autoComplete="off"
+                    onSubmit={handleSubmit}
+                >
+                    <div>
+                        <TextField id="outlined-basic" error={emailError} label="Email" variant="outlined" name="email" />
+                    </div>
+                    <div>
+                        <TextField id="outlined-basic" error={passwordError} label="Password" type="password" variant="outlined" name="password" />
+                    </div>
+                    <div>
+                        <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" type="password" variant="outlined" name="confirmPassword" />
+                    </div>
+                    <div>
+                        <Input type="submit" value="Submit" />
+                    </div>
+                </Box>
+                <div style={{margin: '25px'}}>
+                    <div>
+                        <Button variant="outlined" onClick={() => {navigate("/")}}>Go Back</Button>
+                    </div>
                 </div>
             </div>
         </div>

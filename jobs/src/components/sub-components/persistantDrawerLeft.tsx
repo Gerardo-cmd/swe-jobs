@@ -99,7 +99,7 @@ const PersistentDrawerLeft = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            SWE Jobs
+            Application Tracker
           </Typography>
         </Toolbar>
       </AppBar>

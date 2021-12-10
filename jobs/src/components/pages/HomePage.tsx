@@ -4,6 +4,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import TemporaryDrawer from '../sub-components/persistantDrawerLeft';
 import Header from '../sub-components/header';
 import PositionCard from '../sub-components/positionCard';
 import { useNavigate } from 'react-router';
@@ -133,6 +134,7 @@ const HomePage: React.FC = () => {
 
     return (
         <div className="Page container">
+            <TemporaryDrawer />
             {loading ? "" : <div>
             <Header title={"Applied Positions"}/>
             <FormGroup style={{marginTop: "25px", marginBottom: "50px"}}>

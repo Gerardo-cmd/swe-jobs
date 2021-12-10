@@ -6,6 +6,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import TemporaryDrawer from '../sub-components/persistantDrawerLeft';
 import Header from '../sub-components/header';
 import { useNavigate, useParams } from 'react-router';
 
@@ -188,6 +189,7 @@ const EditPosition: React.FC = () => {
 
     return (
         <div className="Page container">
+            <TemporaryDrawer />
             <Header title={"Edit Position"}/>
             {loading ? "" : 
             <Box

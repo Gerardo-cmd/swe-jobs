@@ -4,8 +4,10 @@ import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
+import TemporaryDrawer from '../sub-components/persistantDrawerLeft';
 import Header from '../sub-components/header';
 import { useNavigate } from 'react-router';
 
@@ -121,6 +123,7 @@ const NewPosition: React.FC = () => {
 
     return (
         <div className="Page container">
+            <TemporaryDrawer />
             <Header title={"New Position"}/>
             <Box
                 component="form"
@@ -166,6 +169,11 @@ const NewPosition: React.FC = () => {
                             </option>
                         ))}
                     </TextField>
+                </div>
+                <div style={{marginBottom: '20px'}}>
+                    <Typography>
+                        Not sure? Check <a href="https://www.glassdoor.com" target="_blank">glassdoor</a>!
+                    </Typography>
                 </div>
                 <div>
                     <TextField
