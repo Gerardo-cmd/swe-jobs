@@ -1,19 +1,21 @@
-import React, { useState, useEffect} from 'react';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import TextField from '@mui/material/TextField';
 import Header from '../sub-components/header';
 import { useNavigate } from 'react-router';
 
-const Login: React.FC = () => {
+const SignUp: React.FC = () => {
     const navigate = useNavigate();
     const [emailError, setEmailError] = useState<boolean>(false);
     const [passwordError, setPasswordError] = useState<boolean>(false);
+    const [confirmPasswordError, setConfirmPasswordError] = useState<boolean>(false);
 
     const resetErrors = () => {
         setEmailError(false);
         setPasswordError(false);
+        setConfirmPasswordError(false);
     }
 
     const handleSubmit = (e: any) => {
@@ -22,6 +24,7 @@ const Login: React.FC = () => {
         
         const email = e.target.email.value.trim();
         const password = e.target.password.value.trim();
+        const confirmPassword = e.target.confirmPassword.value.trim();
         let error = false;
         if (email === "") {
             setEmailError(true);
@@ -29,6 +32,15 @@ const Login: React.FC = () => {
         }
         if (password === "") {
             setPasswordError(true);
+            error = true;
+        }
+        if (confirmPassword === "") {
+            setConfirmPasswordError(true);
+            error = true;
+        }
+        if (password !== "" && confirmPassword !== "" && password !== confirmPassword) {
+            setPasswordError(true);
+            setConfirmPasswordError(true);
             error = true;
         }
         if (error) {
@@ -42,7 +54,7 @@ const Login: React.FC = () => {
             email,
             password
         };
-        fetch('http://swe-jobs.herokuapp.com/login', {
+        fetch('http://swe-jobs.herokuapp.com/new-user', {
             method: 'POST',
             mode: 'cors',
             headers: headers,
@@ -61,7 +73,7 @@ const Login: React.FC = () => {
 
     return (
         <div className="Page container">
-            <Header title={"Jobs"}/>
+            <Header title={"Sign Up"}/>
             <Box
                 component="form"
                 sx={{
@@ -78,14 +90,15 @@ const Login: React.FC = () => {
                     <TextField id="outlined-basic" error={passwordError} label="Password" variant="outlined" name="password" />
                 </div>
                 <div>
-                    <Input type="submit" value="Submit" />
+                    <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" variant="outlined" name="confirmPassword" />
                 </div>
                 <div>
-                    <Button variant="outlined" onClick={() => {navigate("/signup")}}>Sign Up</Button>
+                    <Input type="submit" value="Submit" />
                 </div>
             </Box>
+            <Button variant="outlined" onClick={() => {navigate("/")}}>Go back</Button>
         </div>
     );
 }
 
-export default Login;
+export default SignUp;
