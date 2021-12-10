@@ -65,7 +65,7 @@ const EditPosition: React.FC = () => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', `Bearer ${token}`);
-        fetch(`http://swe-jobs.herokuapp.com/job/${positionId}`, {
+        fetch(`https://swe-jobs.herokuapp.com/job/${positionId}`, {
             method: 'GET',
             mode: 'cors',
             headers: headers
@@ -141,7 +141,7 @@ const EditPosition: React.FC = () => {
             workEnvironment: environment,
             status: status
         };
-        fetch('http://swe-jobs.herokuapp.com/job', {
+        fetch('https://swe-jobs.herokuapp.com/job', {
             method: 'POST',
             mode: 'cors',
             headers: headers,
@@ -170,7 +170,7 @@ const EditPosition: React.FC = () => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', `Bearer ${token}`);
-        fetch('http://swe-jobs.herokuapp.com/job', {
+        fetch('https://swe-jobs.herokuapp.com/job', {
             method: 'DELETE',
             mode: 'cors',
             headers: headers,

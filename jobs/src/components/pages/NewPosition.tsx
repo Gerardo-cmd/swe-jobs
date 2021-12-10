@@ -103,7 +103,7 @@ const NewPosition: React.FC = () => {
             workEnvironment: environment,
             status: status
         };
-        fetch('http://swe-jobs.herokuapp.com/new-job', {
+        fetch('https://swe-jobs.herokuapp.com/new-job', {
             method: 'POST',
             mode: 'cors',
             headers: headers,

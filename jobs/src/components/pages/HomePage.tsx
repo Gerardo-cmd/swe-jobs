@@ -52,7 +52,7 @@ const HomePage: React.FC = () => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', `Bearer ${token}`);
-        fetch("http://swe-jobs.herokuapp.com/jobs", {
+        fetch("https://swe-jobs.herokuapp.com/jobs", {
             method: 'GET',
             mode: 'cors',
             headers: headers

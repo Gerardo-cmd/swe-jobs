@@ -49,7 +49,7 @@ const SignUp: React.FC = () => {
             email,
             password
         };
-        fetch('http://swe-jobs.herokuapp.com/new-user', {
+        fetch('https://swe-jobs.herokuapp.com/new-user', {
             method: 'POST',
             mode: 'cors',
             headers: headers,

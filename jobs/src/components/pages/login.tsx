@@ -43,7 +43,7 @@ const Login: React.FC = () => {
             email,
             password
         };
-        fetch('http://swe-jobs.herokuapp.com/login', {
+        fetch('https://swe-jobs.herokuapp.com/login', {
             method: 'POST',
             mode: 'cors',
             headers: headers,
