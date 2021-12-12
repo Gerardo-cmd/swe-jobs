@@ -18,6 +18,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import AddIcon from '@mui/icons-material/Add';
+import PieChartIcon from '@mui/icons-material/PieChart';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const drawerWidth = 240;
@@ -99,7 +100,7 @@ const PersistentDrawerLeft = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Application Tracker
+            Job Application Tracker
           </Typography>
         </Toolbar>
       </AppBar>
@@ -132,13 +133,22 @@ const PersistentDrawerLeft = () => {
               <HomeIcon />
             </ListItemIcon>
           </ListItem>
-          <ListItem button key={"Add new position"} onClick={() => {
+          <ListItem button key={"New position"} onClick={() => {
             handleDrawerClose();
             navigate("/new-position");
           }}>
-            <ListItemText primary={"Add new position"} />
+            <ListItemText primary={"New position"} />
             <ListItemIcon>
               <AddIcon />
+            </ListItemIcon>
+          </ListItem>
+          <ListItem button key={"Data"} onClick={() => {
+            handleDrawerClose();
+            navigate("/data");
+          }}>
+            <ListItemText primary={"Data"} />
+            <ListItemIcon>
+              <PieChartIcon />
             </ListItemIcon>
           </ListItem>
           <ListItem button key={"Log Out"} onClick={() => {

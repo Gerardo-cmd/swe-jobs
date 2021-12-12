@@ -137,7 +137,7 @@ const HomePage: React.FC = () => {
             <TemporaryDrawer />
             {loading ? "" : <div>
             <Header title={"Applied Positions"}/>
-            <FormGroup style={{marginTop: "25px", marginBottom: "50px"}}>
+            <FormGroup style={{marginTop: "15px", marginBottom: "50px", background: "white", boxShadow: `0 0 25px 3px black`, padding: "1rem"}}>
                 <div className="row"style={{marginBottom: "25px"}} >
                     <div className="col-2">
                     </div>
@@ -186,7 +186,7 @@ const HomePage: React.FC = () => {
                     </div>
                 </div>
             </FormGroup>
-            {jobs.length === 0 ? "You currently have no saved positions": ""}
+            <div style={{fontWeight: "bold"}}>{jobs.length === 0 ? "You have no saved positions! Why not make a new one?": ""}</div>
             <Box component="span">
                 <div className="row">
                     {jobs.sort((a: PositionObject, b: PositionObject) => {

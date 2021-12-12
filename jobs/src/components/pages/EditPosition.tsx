@@ -193,6 +193,7 @@ const EditPosition: React.FC = () => {
             <Header title={"Edit Position"}/>
             {loading ? "" : 
             <Box
+                style={{ marginTop: "15px", border: "0.5px black solid", background: "white", boxShadow: `0 0 25px 3px black`, padding: "0.5rem"}}
                 component="form"
                 sx={{
                     '& .MuiTextField-root': { m: 1, width: '25ch' },

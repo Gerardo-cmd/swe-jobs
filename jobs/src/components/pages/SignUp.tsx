@@ -5,12 +5,14 @@ import Input from '@mui/material/Input';
 import TextField from '@mui/material/TextField';
 import Header from '../sub-components/header';
 import { useNavigate } from 'react-router';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
     const [emailError, setEmailError] = useState<boolean>(false);
     const [passwordError, setPasswordError] = useState<boolean>(false);
     const [confirmPasswordError, setConfirmPasswordError] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const resetErrors = () => {
         setEmailError(false);
@@ -22,7 +24,7 @@ const SignUp: React.FC = () => {
         e.preventDefault();
         resetErrors();
         
-        const email = e.target.email.value.trim();
+        const email = e.target.email.value.toLowerCase().trim();
         const password = e.target.password.value.trim();
         const confirmPassword = e.target.confirmPassword.value.trim();
         if (email === "") {
@@ -42,6 +44,7 @@ const SignUp: React.FC = () => {
             setConfirmPasswordError(true);
             return;
         }
+        setLoading(true);
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
@@ -59,18 +62,20 @@ const SignUp: React.FC = () => {
         .then(data => {
             console.log('Success:', data);
             localStorage.setItem("jobs-token", data.data.token);
+            setLoading(false);
             navigate("/homepage");
         })
         .catch((error) => {
             console.error('Error:', error);
+            setLoading(false);
         });
     }
 
     return (
         <div className="Page container">
-            <div style={{marginTop: '8rem'}}>
-                <Header title={"Sign Up"}/>
+            <div style={{opacity: 0}}><Header title={"."}/></div>
                 <Box
+                    style={{  marginTop: "8rem", marginBottom: "8rem", border: "0.5px black solid", background: "white",  boxShadow: `0 0 25px 3px black`}}
                     component="form"
                     sx={{
                         '& .MuiTextField-root': { m: 1, width: '25ch' },
@@ -80,6 +85,9 @@ const SignUp: React.FC = () => {
                     onSubmit={handleSubmit}
                 >
                     <div>
+                        <Header title={"Sign Up"}/>
+                    </div>
+                    <div style={{marginTop: "1rem"}}>
                         <TextField id="outlined-basic" error={emailError} label="Email" variant="outlined" name="email" />
                     </div>
                     <div>
@@ -89,15 +97,15 @@ const SignUp: React.FC = () => {
                         <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" type="password" variant="outlined" name="confirmPassword" />
                     </div>
                     <div>
-                        <Input type="submit" value="Submit" />
+                        {loading ? <CircularProgress /> : <Input type="submit" value="Submit" />}
                     </div>
-                </Box>
-                <div style={{margin: '25px'}}>
+                    <div style={{margin: '25px'}}>
                     <div>
                         <Button variant="outlined" onClick={() => {navigate("/")}}>Go Back</Button>
                     </div>
-                </div>
-            </div>
+                    </div>
+                </Box>
+                
         </div>
     );
 }

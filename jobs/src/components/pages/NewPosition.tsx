@@ -40,11 +40,11 @@ const statuses = [
 
 const NewPosition: React.FC = () => {
     const navigate = useNavigate();
-    const [positionTitleError, setPositionTitleError] = useState(false);
-    const [companyError, setCompanyError] = useState(false);
-    const [salaryError, setSalaryError] = useState(false);
-    const [environment, setEnvironment] = useState('On-site');
-    const [status, setStatus] = useState('Applied');
+    const [positionTitleError, setPositionTitleError] = useState<boolean>(false);
+    const [companyError, setCompanyError] = useState<boolean>(false);
+    const [salaryError, setSalaryError] = useState<boolean>(false);
+    const [environment, setEnvironment] = useState<string>('On-site');
+    const [status, setStatus] = useState<string>('Applied');
 
     useEffect(() => {
         const token: string | null = localStorage.getItem("jobs-token");
@@ -126,6 +126,7 @@ const NewPosition: React.FC = () => {
             <TemporaryDrawer />
             <Header title={"New Position"}/>
             <Box
+                style={{ marginTop: "15px", border: "0.5px black solid", background: "white", boxShadow: `0 0 25px 3px black`, padding: "0.5rem"}}
                 component="form"
                 sx={{
                     '& .MuiTextField-root': { m: 1, width: '25ch' },
@@ -151,6 +152,11 @@ const NewPosition: React.FC = () => {
                         />
                     </FormControl>
                 </div>
+                <div style={{marginBottom: '20px'}}>
+                    <Typography>
+                        Not sure? Check <a href="https://www.glassdoor.com" target="_blank" rel="noreferrer">glassdoor</a>!
+                    </Typography>
+                </div>
                 <div>
                     <TextField
                         id="standard-select-environment"
@@ -169,11 +175,6 @@ const NewPosition: React.FC = () => {
                             </option>
                         ))}
                     </TextField>
-                </div>
-                <div style={{marginBottom: '20px'}}>
-                    <Typography>
-                        Not sure? Check <a href="https://www.glassdoor.com" target="_blank">glassdoor</a>!
-                    </Typography>
                 </div>
                 <div>
                     <TextField

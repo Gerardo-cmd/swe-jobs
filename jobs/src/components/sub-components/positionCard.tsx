@@ -64,7 +64,7 @@ const PositionCard = (props: CardProps) => {
   }
 
   return (
-      <Card style={{height:"230px", margin: "10px", boxShadow: `0 0 10px 2px ${statusColor} inset`}} variant="outlined">{card(props.company, props.title, props.salary, props.environment, props.status, statusColor, navigate)}</Card>
+      <Card style={{height:"230px", margin: "10px", boxShadow: `0 0 10px 2px ${statusColor}`}} variant="outlined">{card(props.company, props.title, props.salary, props.environment, props.status, statusColor, navigate)}</Card>
   );
 }
 
