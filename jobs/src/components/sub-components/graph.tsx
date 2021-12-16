@@ -29,7 +29,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
-    <text x={x+15} y={y-5} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+    <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="end">
       {`${(percent * 100).toFixed(0)}%`}
     </text>
   );
@@ -79,7 +79,6 @@ class Graph extends PureComponent<DataProp> {
             cx="50%"
             cy="50%"
             labelLine={false}
-            label={renderCustomizedLabel}
             outerRadius={130}
             fill="#8884d8"
             dataKey="value"

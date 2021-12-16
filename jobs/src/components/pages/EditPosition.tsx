@@ -9,6 +9,7 @@ import FormControl from '@mui/material/FormControl';
 import TemporaryDrawer from '../sub-components/persistantDrawerLeft';
 import Header from '../sub-components/header';
 import { useNavigate, useParams } from 'react-router';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface PositionObject  {
     title: string;
@@ -16,6 +17,7 @@ interface PositionObject  {
     salary: string;
     workEnvironment: string;
     status: string;
+    desc: string | null;
 }
 
 const environments = [
@@ -48,17 +50,17 @@ const statuses = [
 const EditPosition: React.FC = () => {
     let params = useParams();
     const navigate = useNavigate();
-    const [positionTitleError, setPositionTitleError] = useState(false);
-    const [companyError, setCompanyError] = useState(false);
-    const [salaryError, setSalaryError] = useState(false);
-    const [environment, setEnvironment] = useState('On-site');
-    const [status, setStatus] = useState('Applied');
+    const [positionTitleError, setPositionTitleError] = useState<boolean>(false);
+    const [companyError, setCompanyError] = useState<boolean>(false);
+    const [salaryError, setSalaryError] = useState<boolean>(false);
+    const [environment, setEnvironment] = useState<string>('On-site');
+    const [status, setStatus] = useState<string>('Applied');
     const [job, setJob] = useState<PositionObject | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const positionId = params.positionId;
-        let headers = new Headers();
+        const positionId: string | undefined = params.positionId;
+        let headers: HeadersInit | undefined = new Headers();
         const token: string | null = localStorage.getItem("jobs-token");
         if (token == null) {
             navigate("/");
@@ -89,14 +91,14 @@ const EditPosition: React.FC = () => {
         });
     }, []);
 
-    const handleEnvironmentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleEnvironmentChange: ((event: React.ChangeEvent<HTMLInputElement>) => void) = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEnvironment(event.target.value);
     };
-    const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleStatusChange: ((event: React.ChangeEvent<HTMLInputElement>) => void) = (event: React.ChangeEvent<HTMLInputElement>) => {
         setStatus(event.target.value);
     };
 
-    const resetErrors = () => {
+    const resetErrors: (() => void) = () => {
         setPositionTitleError(false);
         setCompanyError(false);
         setSalaryError(false);
@@ -114,9 +116,10 @@ const EditPosition: React.FC = () => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', `Bearer ${token}`);
-        const positionTitle = e.target.positionTitle.value.trim();
-        const company = e.target.company.value.trim();
-        const salary = e.target.salary.value.replaceAll(",", "").trim();
+        const positionTitle: string = e.target.positionTitle.value.trim();
+        const company: string = e.target.company.value.trim();
+        const salary: string = e.target.salary.value.replaceAll(",", "").trim();
+        const desc: string = e.target.desc.value.trim();
         let error = false;
         if (positionTitle === "") {
             setPositionTitleError(true);
@@ -140,7 +143,8 @@ const EditPosition: React.FC = () => {
             company: company,
             salary: salary,
             workEnvironment: environment,
-            status: status
+            status: status,
+            desc: desc !== "" ? desc : null
         };
         fetch('https://swe-jobs.herokuapp.com/job', {
             method: 'POST',
@@ -158,7 +162,7 @@ const EditPosition: React.FC = () => {
         });
     }
 
-    const handleDelete = () => {
+    const handleDelete: (() => void) = () => {
         const token: string | null = localStorage.getItem("jobs-token");
         if (token == null) {
             navigate("/");
@@ -191,7 +195,7 @@ const EditPosition: React.FC = () => {
         <div className="Page container">
             <TemporaryDrawer />
             <Header title={"Edit Position"}/>
-            {loading ? "" : 
+            {loading ? <CircularProgress /> : 
             <Box
                 style={{ marginTop: "15px", border: "0.5px black solid", background: "white", boxShadow: `0 0 25px 3px black`, padding: "0.5rem"}}
                 component="form"
@@ -257,6 +261,16 @@ const EditPosition: React.FC = () => {
                             </option>
                         ))}
                     </TextField>
+                </div>
+                <div>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Description (optional)"
+                        multiline
+                        rows={4}
+                        defaultValue={job?.desc}
+                        name="desc"
+                    />
                 </div>
                 <div>
                     <Input type="submit" value="Save" />

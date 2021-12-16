@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import Header from '../sub-components/header';
 import { useNavigate } from 'react-router';
 import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 const SignUp: React.FC = () => {
     const navigate = useNavigate();
@@ -14,24 +15,24 @@ const SignUp: React.FC = () => {
     const [confirmPasswordError, setConfirmPasswordError] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const resetErrors = () => {
+    const resetErrors:(() => void) = () => {
         setEmailError(false);
         setPasswordError(false);
         setConfirmPasswordError(false);
     }
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit:((e: any) => void) = (e: any) => {
         e.preventDefault();
         resetErrors();
         
-        const email = e.target.email.value.toLowerCase().trim();
-        const password = e.target.password.value.trim();
-        const confirmPassword = e.target.confirmPassword.value.trim();
+        const email: string = e.target.email.value.toLowerCase().trim();
+        const password: string = e.target.password.value.trim();
+        const confirmPassword: string = e.target.confirmPassword.value.trim();
         if (email === "") {
             setEmailError(true);
             return;
         }
-        if (password === "") {
+        if (password.length < 8) {
             setPasswordError(true);
             return;
         }
@@ -45,7 +46,7 @@ const SignUp: React.FC = () => {
             return;
         }
         setLoading(true);
-        let headers = new Headers();
+        let headers: HeadersInit | undefined = new Headers();
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         const data = {
@@ -95,6 +96,9 @@ const SignUp: React.FC = () => {
                     </div>
                     <div>
                         <TextField id="outlined-basic" error={confirmPasswordError} label="Confirm Password" type="password" variant="outlined" name="confirmPassword" />
+                    </div>
+                    <div style={{marginTop: "5px", marginBottom: "5px"}}>
+                        <Typography>Password must be at least 8 characters</Typography>
                     </div>
                     <div>
                         {loading ? <CircularProgress /> : <Input type="submit" value="Submit" />}

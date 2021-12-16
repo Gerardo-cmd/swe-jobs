@@ -10,8 +10,8 @@ const card = (company: String, title: String, salary: String, environment: Strin
       <React.Fragment>
         <Link
           style={{ display: "block", margin: "1rem 0", textDecoration: "none", color: "black"}}
-          to={`/${company.replace(/ /g, "_")}-${title.replace(/ /g, "_")}`}
-          key={`${company.replace(/ /g, "_")}-${title.replace(/ /g, "_")}`}
+          to={`/view/${company.replace(/ /g, "_")}-${title.replace(/ /g, "_")}`}
+          key={`/view/${company.replace(/ /g, "_")}-${title.replace(/ /g, "_")}`}
         >
           <CardContent>
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>

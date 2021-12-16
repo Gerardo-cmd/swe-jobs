@@ -8,6 +8,7 @@ import TemporaryDrawer from '../sub-components/persistantDrawerLeft';
 import Header from '../sub-components/header';
 import PositionCard from '../sub-components/positionCard';
 import { useNavigate } from 'react-router';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface PositionObject  {
     title: string;
@@ -38,6 +39,7 @@ const HomePage: React.FC = () => {
     const [jobs, setJobs] = useState<PositionObject[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [sortBy, setSortBy] = useState<String>("Income");
+    const [search, setSearch] = useState<string>("");
     const [filter, setFilter] = useState<FilterObject>({
         appliedFilterOn: false, 
         interviewingFilterOn: false, 
@@ -71,7 +73,7 @@ const HomePage: React.FC = () => {
         });
     }, []);
 
-    const changeAppliedFilter = () => {
+    const changeAppliedFilter:(() => void) = () => {
         setFilter({
             appliedFilterOn: !filter.appliedFilterOn,
             interviewingFilterOn: filter.interviewingFilterOn, 
@@ -80,7 +82,7 @@ const HomePage: React.FC = () => {
         });
     }
 
-    const changeInterviewingFilter = () => {
+    const changeInterviewingFilter:(() => void) = () => {
         setFilter({
             appliedFilterOn: filter.appliedFilterOn,
             interviewingFilterOn: !filter.interviewingFilterOn, 
@@ -89,7 +91,7 @@ const HomePage: React.FC = () => {
         });
     }
 
-    const changeDeniedFilter = () => {
+    const changeDeniedFilter:(() => void) = () => {
         setFilter({
             appliedFilterOn: filter.appliedFilterOn,
             interviewingFilterOn: filter.interviewingFilterOn, 
@@ -98,7 +100,7 @@ const HomePage: React.FC = () => {
         });
     }
 
-    const changeOfferedFilter = () => {
+    const changeOfferedFilter:(() => void) = () => {
         setFilter({
             appliedFilterOn: filter.appliedFilterOn,
             interviewingFilterOn: filter.interviewingFilterOn, 
@@ -107,16 +109,16 @@ const HomePage: React.FC = () => {
         });
     }
 
-    const handleSortingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleSortingChange:((event: React.ChangeEvent<HTMLInputElement>) => void) = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSortBy(event.target.value);
     }
 
     const isFilterOn = () => {
-        return (filter.appliedFilterOn || filter.interviewingFilterOn || filter.deniedFilterOn || filter.offeredFilterOn);
+        return (filter.appliedFilterOn || filter.interviewingFilterOn || filter.deniedFilterOn || filter.offeredFilterOn || search.trim() !== "");
     }
 
-    const filterPosition = (position: PositionObject) => {
-        let passes = false;
+    const filterPosition:((position: PositionObject) => boolean) = (position: PositionObject) => {
+        let passes: boolean = false;
         if (filter.appliedFilterOn && position.status.toLowerCase() === "applied") {
             passes = true;
         }
@@ -129,13 +131,26 @@ const HomePage: React.FC = () => {
         if (filter.offeredFilterOn && position.status.toLowerCase() === "offered") {
             passes = true;
         }
+        if (search !== "") {
+            if (position.company.toLowerCase().includes(search.toLowerCase()) || position.title.toLowerCase().includes(search.toLowerCase())) {
+                passes = true;
+            }
+            else {
+                passes = false;
+            }
+        }
         return passes;
     }
+
+    const handleSearchChange: ((event: React.ChangeEvent<HTMLInputElement>) => void) = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log("Changing search to " + event.target.value.trim());
+        setSearch(event.target.value.trim());
+    };
 
     return (
         <div className="Page container">
             <TemporaryDrawer />
-            {loading ? "" : <div>
+            {loading ? <CircularProgress /> : <div>
             <Header title={"Applied Positions"}/>
             <FormGroup style={{marginTop: "15px", marginBottom: "50px", background: "white", boxShadow: `0 0 25px 3px black`, padding: "1rem"}}>
                 <div className="row"style={{marginBottom: "25px"}} >
@@ -164,23 +179,30 @@ const HomePage: React.FC = () => {
                     <div className="col-2">
                     </div>
                     <div className="col-8">
-                        <TextField
-                            id="standard-select-status"
-                            select
-                            label="Sort By"
-                            value={sortBy}
-                            onChange={handleSortingChange}
-                            SelectProps={{
-                                native: true,
-                            }}
-                            variant="outlined"
-                            >
-                            {sortingOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.value}
-                                </option>
-                            ))}
-                        </TextField>
+                        <div className="row">
+                            <div style={{marginTop: "0.6rem"}} className="col-md-6">
+                                <TextField id="outlined-basic" onChange={handleSearchChange} label="Search (Title or Company)" variant="outlined" name="search" />
+                            </div>
+                            <div style={{marginTop: "0.6rem"}} className="col-md-6">
+                                <TextField
+                                    id="standard-select-status"
+                                    select
+                                    label="Sort By"
+                                    value={sortBy}
+                                    onChange={handleSortingChange}
+                                    SelectProps={{
+                                        native: true,
+                                    }}
+                                    variant="outlined"
+                                    >
+                                    {sortingOptions.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.value}
+                                        </option>
+                                    ))}
+                                </TextField>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-2">
                     </div>

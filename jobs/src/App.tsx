@@ -9,6 +9,7 @@ import Login from './components/pages/Login';
 import SignUp from './components/pages/SignUp';
 import HomePage from './components/pages/HomePage';
 import NewPosition from './components/pages/NewPosition';
+import ViewPosition from './components/pages/ViewPosition';
 import EditPosition from './components/pages/EditPosition';
 import Data from './components/pages/Data';
 import { createTheme, ThemeProvider } from '@mui/material';
@@ -46,6 +47,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/homepage" element={<HomePage />} />
+          <Route path="/view/:positionId" element={<ViewPosition />} />
           <Route path="/:positionId" element={<EditPosition />} />
           <Route path="/new-position" element={<NewPosition />} />
           <Route path="/data" element={<Data />} />

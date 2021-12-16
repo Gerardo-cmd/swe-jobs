@@ -78,9 +78,10 @@ const NewPosition: React.FC = () => {
         headers.append('Content-Type', 'application/json');
         headers.append('Accept', 'application/json');
         headers.append('Authorization', `Bearer ${token}`);
-        const positionTitle = e.target.positionTitle.value.trim();
-        const company = e.target.company.value.trim();
-        const salary = e.target.salary.value.replaceAll(",", "").trim();
+        const positionTitle: string = e.target.positionTitle.value.trim();
+        const company: string = e.target.company.value.trim();
+        const salary: string = e.target.salary.value.replaceAll(",", "").trim();
+        const desc: string = e.target.desc.value.trim();
         let error = false;
         if (positionTitle === "") {
             setPositionTitleError(true);
@@ -103,7 +104,8 @@ const NewPosition: React.FC = () => {
             company: company,
             salary: salary,
             workEnvironment: environment,
-            status: status
+            status: status,
+            desc: desc !== "" ? desc : null
         };
         fetch('https://swe-jobs.herokuapp.com/new-job', {
             method: 'POST',
@@ -136,17 +138,18 @@ const NewPosition: React.FC = () => {
                 onSubmit={handleSubmit}
             >
                 <div>
-                    <TextField id="outlined-basic" error={positionTitleError} label="Position Title" variant="outlined" name="positionTitle" inputProps={{ maxLength: 40}} />
+                    <TextField id="outlined-basic" error={positionTitleError} required label="Position Title" variant="outlined" name="positionTitle" inputProps={{ maxLength: 40}} />
                 </div>
                 <div>
-                    <TextField id="outlined-basic" error={companyError} label="Company" variant="outlined" name="company" />
+                    <TextField id="outlined-basic" error={companyError} required label="Company" variant="outlined" name="company" />
                 </div>
                 <div>
                     <FormControl sx={{ m: 1 }}>
-                        <InputLabel htmlFor="outlined-adornment-amount">Yearly Salary</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-amount">Yearly Salary *</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-amount"
                             error={salaryError}
+                            required
                             label="Yearly Salary"
                             name="salary"
                         />
@@ -161,6 +164,7 @@ const NewPosition: React.FC = () => {
                     <TextField
                         id="standard-select-environment"
                         select
+                        required
                         label="Environment"
                         value={environment}
                         onChange={handleEnvironmentChange}
@@ -180,6 +184,7 @@ const NewPosition: React.FC = () => {
                     <TextField
                         id="standard-select-status"
                         select
+                        required
                         label="Status"
                         value={status}
                         onChange={handleStatusChange}
@@ -194,6 +199,15 @@ const NewPosition: React.FC = () => {
                             </option>
                         ))}
                     </TextField>
+                </div>
+                <div>
+                    <TextField
+                        id="outlined-multiline-static"
+                        label="Description (optional)"
+                        multiline
+                        rows={4}
+                        name="desc"
+                    />
                 </div>
                 <div style={{marginTop: '5px'}}>
                     <Input type="submit" value="Submit" />

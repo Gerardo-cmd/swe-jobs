@@ -5,6 +5,15 @@ import Header from '../sub-components/header';
 import Graph from '../sub-components/graph';
 import { useNavigate } from 'react-router';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+
+interface Tally {
+    applied: number;
+    interviewing: number;
+    denied: number;
+    offered: number;
+    total: number;
+}
 
 interface PositionObject  {
     title: string;
@@ -60,7 +69,7 @@ const Data: React.FC = () => {
         offeredFilterOn: false
     });
     useEffect(() => {
-        let headers = new Headers();
+        let headers: HeadersInit | undefined = new Headers();
         const token: string | null = localStorage.getItem("jobs-token");
         if (token == null) {
             navigate("/");
@@ -147,20 +156,48 @@ const Data: React.FC = () => {
         return passes;
     }
 
+    const calculateTally: (() => Tally) = () => {
+        let counts = {
+          applied: 0,
+          interviewing: 0,
+          denied: 0,
+          offered: 0,
+          total: 0
+        }
+        jobs.forEach((job) => {
+          switch (job.status.toLowerCase()) {
+            case "applied":
+              counts.applied++;
+              break;
+            case "interviewing":
+              counts.interviewing++;
+              break;
+            case "denied":
+              counts.denied++;
+              break;
+            case "offered":
+              counts.offered++;
+              break;
+          }
+          counts.total++;
+        });
+        return counts;
+      };
+
     return (
         <div className="Page container">
             <TemporaryDrawer />
-            {loading ? "" : <div>
+            {loading ? <CircularProgress /> : <div>
             <Header title={"Data"}/>
                 <div className="row">
                     <div className="col-sm-1" />
                         <div style={{ marginTop: "15px", border: "0.5px black solid", background: "white", boxShadow: `0 0 25px 3px black`, padding: "0.5rem"}} className="col-sm-10">
                             <div style={{fontWeight: "bold"}}>{jobs.length === 0 ? "You have no saved positions! Why not make a new one?": ""}</div>
                             <Box component="span">
-                                <Typography style={{color: "blue", fontWeight: "bold", marginTop: "2rem"}}>Applied</Typography>
-                                <Typography style={{color: "orange", fontWeight: "bold"}}>Interviewing</Typography>
-                                <Typography style={{color: "red", fontWeight: "bold"}}>Denied</Typography>
-                                <Typography style={{color: "green", fontWeight: "bold"}}>Offered</Typography>
+                                <Typography style={{color: "blue", fontWeight: "bold", marginTop: "2rem"}}>Applied: {Math.round((((calculateTally().applied / calculateTally().total) * 100 + Number.EPSILON) * 100) / 100)}% ({calculateTally().applied})</Typography>
+                                <Typography style={{color: "orange", fontWeight: "bold"}}>Interviewing: {Math.round((((calculateTally().interviewing / calculateTally().total) * 100 + Number.EPSILON) * 100) / 100)}% ({calculateTally().interviewing})</Typography>
+                                <Typography style={{color: "red", fontWeight: "bold"}}>Denied: {Math.round((((calculateTally().denied / calculateTally().total) * 100 + Number.EPSILON) * 100) / 100)}% ({calculateTally().denied})</Typography>
+                                <Typography style={{color: "green", fontWeight: "bold"}}>Offered: {Math.round((((calculateTally().offered / calculateTally().total) * 100 + Number.EPSILON) * 100) / 100)}% ({calculateTally().offered})</Typography>
                                 <Graph jobs={jobs}/>
                             </Box>
                         </div>
